@@ -32,10 +32,10 @@
                                 <td class="p-2 md:border md:border-grey-500 text-left block md:table-cell"><span class="inline-block w-1/3 md:hidden font-bold">Name</span>{{$product->name}}</td>
                                 <td class="p-2 md:border md:border-grey-500 text-left block md:table-cell"><span class="inline-block w-1/3 md:hidden font-bold">Name</span>{{$product->category?->name}}</td>
                                 <td class="p-2 md:border md:border-grey-500 text-left block md:table-cell"><span class="inline-block w-1/3 md:hidden font-bold">Name</span>{{$product->brand?->name}}</td>
-                                <td class="p-2 md:border md:border-grey-500 text-left block md:table-cell"><span class="inline-block w-1/3 md:hidden font-bold">Image</span>NuLL</td>
+                                <td class="p-2 md:border md:border-grey-500 text-left block md:table-cell"><span class="inline-block w-1/3 md:hidden font-bold">Image</span><img class="object-cover h-10 w-full" src="{{asset('images/'.($product->image ?? 'no-image.png'))}}" alt="image"></td>
                                 <td class="p-2 md:border md:border-grey-500 text-left block md:table-cell"><span class="inline-block w-1/3 md:hidden font-bold">Sku</span>{{$product->sku}}</td>
                                 <td class="p-2 md:border md:border-grey-500 text-left block md:table-cell"><span class="inline-block w-1/3 md:hidden font-bold">Price</span>{{$product->price}}</td>
-                                <td class="p-2 md:border md:border-grey-500 text-left block md:table-cell"><span class="inline-block w-1/3 md:hidden font-bold">Description</span>{{Str::limit($product->description,25,'...')}}</td>
+                                <td class="p-2 md:border md:border-grey-500 text-left block md:table-cell"><span class="inline-block w-1/3 md:hidden font-bold">Description</span>{{Str::limit($product->description,35,'...')}}</td>
                                 <td class="p-2 md:border md:border-grey-500 text-left block md:table-cell">
                                     <span class="inline-block w-1/3 md:hidden font-bold">Actions</span>
                                     <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-2 border border-blue-500 rounded">

@@ -25,7 +25,7 @@ Route::middleware(['auth'])->group(function() {
     Route::get('/dashboard', function (){
         return view('dashboard');
     })->name('dashboard');
-    Route::resource('/products', ProductController::class, );
+    Route::resource('/products', ProductController::class);
     Route::resource('/categories', CategoryController::class);
 
     // Use all the basic route for brand //

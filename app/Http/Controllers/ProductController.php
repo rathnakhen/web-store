@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Product;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class ProductController extends Controller
 {
@@ -25,7 +26,7 @@ class ProductController extends Controller
      */
     public function create()
     {
-        //
+        return view('products.create');
     }
 
     /**
@@ -36,7 +37,28 @@ class ProductController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $newImageName = null;
+        $request->validate([
+            'name' => 'required|unique:products',
+            'price' => 'required|integer',
+            'sku' => 'required|integer',
+            'image' => 'nullable|image|mimes:jpg,jpeg,bmp,png,svg',
+            'description' => 'required|min:15'
+        ]);
+        if($request->file('image')){
+            $file = $request->file('image');
+            $newImageName = time().'-'. preg_replace('/\s+/', '-', $request->name).'.'.$request->image->extension();
+            $file->move(public_path('images'), $newImageName);
+        }
+//        dd($newImageName);
+        Product::create([
+            'name' => $request->name,
+            'price' => $request->price,
+            'sku' => $request->sku,
+            'image' => $newImageName,
+            'description' => $request->description,
+        ]);
+        return redirect()->route('products.index');
     }
 
     /**
@@ -58,7 +80,7 @@ class ProductController extends Controller
      */
     public function edit(Product $product)
     {
-        //
+        return view('products.edit', compact('product'));
     }
 
     /**
@@ -70,7 +92,29 @@ class ProductController extends Controller
      */
     public function update(Request $request, Product $product)
     {
-        //
+        $newImageName = null;
+        $request->validate([
+            'name' => 'required',
+            'price' => 'required|integer',
+            'sku' => 'required|integer',
+            'image' => 'nullable|image|mimes:jpg,jpeg,bmp,png,svg',
+            'description' => 'required|min:15'
+        ]);
+        if($request->file('image')){
+            $file = $request->file('image');
+            $newImageName = time().'-'. preg_replace('/\s+/', '-', $request->name).'.'.$request->image->extension();
+            $file->move(public_path('images'), $newImageName);
+        } else {
+            $newImageName = $product->image;
+        }
+        $product->update([
+            'name' => $request->name,
+            'price' => $request->price,
+            'sku' => $request->sku,
+            'image' => $newImageName,
+            'description' => $request->description,
+        ]);
+        return redirect()->route('products.index');
     }
 
     /**
@@ -81,6 +125,15 @@ class ProductController extends Controller
      */
     public function destroy(Product $product)
     {
-        //
+//        if(Storage::delete($product->image)){
+//            $product->delete();
+//        }
+        if($product->image){
+            unlink(public_path('images').'/'.$product->image);
+            $product->delete();
+        } else {
+            $product->delete();
+        }
+        return redirect()->route('products.index');
     }
 }
