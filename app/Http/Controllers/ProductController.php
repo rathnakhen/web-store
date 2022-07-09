@@ -7,6 +7,7 @@ use App\Models\Brand;
 use App\Models\Product;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Validation\Rule;
 
 class ProductController extends Controller
 {
@@ -87,11 +88,10 @@ class ProductController extends Controller
      */
     public function edit(Product $product)
     {
-        return view('products.edit', [
-            'product' => $product,
-            'categories' => Category::with('products')->get(),
-            'brands' => Brand::with('products')->get()
-        ]);
+        $categories = Category::with('products')->get()->pluck('name', 'id');
+        $brands = Brand::with('products')->get()->pluck('name', 'id');
+
+        return view('products.edit', compact('product','categories', 'brands'));
     }
 
     /**
@@ -105,6 +105,8 @@ class ProductController extends Controller
     {
         $newImageName = null;
         $request->validate([
+            'category_id' => 'required|exists:categories,id',
+            'brand_id' => 'required|exists:brands,id',
             'name' => 'required',
             'price' => 'required|integer',
             'sku' => 'required|integer',
@@ -119,6 +121,8 @@ class ProductController extends Controller
             $newImageName = $product->image;
         }
         $product->update([
+            'category_id' => $request->category_id,
+            'brand_id' => $request->brand_id,
             'name' => $request->name,
             'price' => $request->price,
             'sku' => $request->sku,

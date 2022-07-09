@@ -25,19 +25,19 @@
                         </div>
                         <div  class="flex flex-col w-full my-5">
                             <label for="category" class="text-gray-500 mb-2">Choose a category</label>
-                            <select type="text" name="category"
+                            <select type="text" name="category_id"
                                     class="appearance-none border-2 border-gray-100 rounded-lg px-4 py-3 placeholder-gray-300 focus:outline-none focus:ring-2 focus:ring-green-600 focus:shadow-lg">
-                                @foreach($categories as $category)
-                                    <option value="{{$category->id}}">{{$category->name}}</option>
+                                @foreach($categories as $id=>$category)
+                                    <option value="{{$id}}" @if($id == $product->category->id) {{'selected'}} @endif>{{$category}} </option>
                                 @endforeach
                             </select>
                         </div>
                         <div  class="flex flex-col w-full my-5">
                             <label for="brand" class="text-gray-500 mb-2">Choose a brand</label>
-                            <select type="text" name="brand"
+                            <select type="text" name="brand_id"
                                     class="appearance-none border-2 border-gray-100 rounded-lg px-4 py-3 placeholder-gray-300 focus:outline-none focus:ring-2 focus:ring-green-600 focus:shadow-lg">
-                                @foreach($brands as $brand)
-                                    <option value="{{$brand->id}}">{{$brand->name}}</option>
+                                @foreach($brands as $id=>$brand)
+                                    <option value="{{$id}}" @if($id == $product->brand->id) {{'selected'}} @endif>{{$brand}} </option>
                                 @endforeach
                             </select>
                         </div>
