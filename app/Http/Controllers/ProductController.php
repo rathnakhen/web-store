@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Category;
+use App\Models\Brand;
 use App\Models\Product;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
@@ -26,7 +28,10 @@ class ProductController extends Controller
      */
     public function create()
     {
-        return view('products.create');
+        return view('products.create',[
+            'categories' => Category::with('products')->get(),
+            'brands' => Brand::with('products')->get()
+        ]);
     }
 
     /**
@@ -52,6 +57,8 @@ class ProductController extends Controller
         }
 //        dd($newImageName);
         Product::create([
+            'category_id' => $request->category,
+            'brand_id' => $request->brand,
             'name' => $request->name,
             'price' => $request->price,
             'sku' => $request->sku,
@@ -80,7 +87,11 @@ class ProductController extends Controller
      */
     public function edit(Product $product)
     {
-        return view('products.edit', compact('product'));
+        return view('products.edit', [
+            'product' => $product,
+            'categories' => Category::with('products')->get(),
+            'brands' => Brand::with('products')->get()
+        ]);
     }
 
     /**

@@ -23,6 +23,24 @@
                             </ul>
                         </div>
                         <div  class="flex flex-col w-full my-5">
+                            <label for="category" class="text-gray-500 mb-2">Choose a category</label>
+                            <select type="text" name="category"
+                                   class="appearance-none border-2 border-gray-100 rounded-lg px-4 py-3 placeholder-gray-300 focus:outline-none focus:ring-2 focus:ring-green-600 focus:shadow-lg">
+                               @foreach($categories as $category)
+                                <option value="{{$category->id}}">{{$category->name}}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <div  class="flex flex-col w-full my-5">
+                            <label for="brand" class="text-gray-500 mb-2">Choose a brand</label>
+                            <select type="text" name="brand"
+                                    class="appearance-none border-2 border-gray-100 rounded-lg px-4 py-3 placeholder-gray-300 focus:outline-none focus:ring-2 focus:ring-green-600 focus:shadow-lg">
+                                @foreach($brands as $brand)
+                                <option value="{{$brand->id}}">{{$brand->name}}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <div  class="flex flex-col w-full my-5">
                             <label for="name" class="text-gray-500 mb-2">Price</label>
                             <input type="text" name="price" value="{{old('price')}}"
                                    class="appearance-none border-2 border-gray-100 rounded-lg px-4 py-3 placeholder-gray-300 focus:outline-none focus:ring-2 focus:ring-green-600 focus:shadow-lg"
