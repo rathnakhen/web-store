@@ -34,19 +34,14 @@
                         {{ __('Brand') }}
                     </x-nav-link>
                 </div>
-                <!-- User Role Links -->
+                <!-- Admin Links -->
+                @if(Auth::user()->hasRole('admin'))
                 <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
-                    <x-nav-link :href="route('roles.index')" :active="request()->routeIs('roles.index')">
-                        {{ __('Role') }}
+                    <x-nav-link :href="route('admin.index')" :active="request()->routeIs('roles.index')">
+                        {{ __('Admin') }}
                     </x-nav-link>
                 </div>
-                <!-- User Links -->
-                <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
-                    <x-nav-link :href="route('users.index')" :active="request()->routeIs('users.index')">
-                        {{ __('User') }}
-                    </x-nav-link>
-                </div>
-
+                    @endif
             </div>
 
             <!-- Settings Dropdown -->

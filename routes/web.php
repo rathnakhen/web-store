@@ -1,11 +1,13 @@
 <?php
 
+use App\Http\Controllers\Admin\PermissionController;
+use App\Http\Controllers\Admin\RoleController;
+use App\Http\Controllers\Admin\AdminController;
+use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\BrandController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\ProductController;
-use App\Http\Controllers\RoleController;
-use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -22,23 +24,31 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', [HomeController::class,'index']);
 
 Route::middleware(['auth'])->group(function() {
+    // Dashboard
     Route::get('/dashboard', function (){
         return view('dashboard');
     })->name('dashboard');
+    // Products
     Route::resource('/products', ProductController::class);
+    // Category
     Route::resource('/categories', CategoryController::class);
 
-    // Use all the basic route for brand //
+    //  Brand (Use all the basic route)
     Route::get('/brands', [BrandController::class, 'index'])->name('brands.index');
     Route::get('/brands/create', [BrandController::class, 'create'])->name('brands.create');
     Route::post('/brands/store', [BrandController::class, 'store'])->name('brands.store');
     Route::get('/brands/{id}/edit', [BrandController::class, 'edit'])->name('brand.edit');
     Route::put('/brands/{id}', [BrandController::class, 'update'])->name('brands.update');
     Route::delete('/brands/{id}', [BrandController::class, 'destroy'])->name('brands.destroy');
-//    Route::resource('/brands', BrandController::class);
 
-    Route::resource('/users', UserController::class);
-    Route::resource('/roles', RoleController::class);
+    // Admin Role & Permission
+    Route::middleware(['auth', 'role:admin'])->name('admin.')->prefix('/admin')->group(function(){
+        Route::get('/', [AdminController::class, 'index'])->name('index');
+        Route::post('/roles/{role}/permissions', [RoleController::class, 'assignPermission'])->name('roles.permissions');
+        Route::resource('/roles', RoleController::class);
+        Route::resource('/permissions', PermissionController::class);
+        Route::resource('/users', UserController::class);
+    });
 });
 
 require __DIR__.'/auth.php';

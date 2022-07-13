@@ -8,6 +8,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 
+
 class User extends Authenticatable
 {
     use HasApiTokens, HasFactory, Notifiable;
@@ -20,7 +21,7 @@ class User extends Authenticatable
     protected $fillable = [
         'name',
         'email',
-        'password',
+        'role_id',
     ];
 
     /**
@@ -41,4 +42,12 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+    public function role(){
+        return $this->belongsTo(Role::class);
+    }
+
+    public function hasRole($name): bool
+    {
+        return $this->role()->where('name', $name)->exists();
+    }
 }

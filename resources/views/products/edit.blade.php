@@ -28,7 +28,7 @@
                             <select type="text" name="category_id"
                                     class="appearance-none border-2 border-gray-100 rounded-lg px-4 py-3 placeholder-gray-300 focus:outline-none focus:ring-2 focus:ring-green-600 focus:shadow-lg">
                                 @foreach($categories as $id=>$category)
-                                    <option value="{{$id}}" @if($id == $product->category->id) {{'selected'}} @endif>{{$category}} </option>
+                                    <option value="{{$id}}" @if($id == $product->category?->id) {{'selected'}} @endif>{{$category}} </option>
                                 @endforeach
                             </select>
                         </div>
@@ -37,7 +37,7 @@
                             <select type="text" name="brand_id"
                                     class="appearance-none border-2 border-gray-100 rounded-lg px-4 py-3 placeholder-gray-300 focus:outline-none focus:ring-2 focus:ring-green-600 focus:shadow-lg">
                                 @foreach($brands as $id=>$brand)
-                                    <option value="{{$id}}" @if($id == $product->brand->id) {{'selected'}} @endif>{{$brand}} </option>
+                                    <option value="{{$id}}" @if($id == $product->brand?->id) {{'selected'}} @endif>{{$brand}} </option>
                                 @endforeach
                             </select>
                         </div>

@@ -29,6 +29,7 @@ class ProductController extends Controller
      */
     public function create()
     {
+        $this->authorize('create', Product::class);
         return view('products.create',[
             'categories' => Category::with('products')->get(),
             'brands' => Brand::with('products')->get()
@@ -43,6 +44,7 @@ class ProductController extends Controller
      */
     public function store(Request $request)
     {
+        $this->authorize('create', Product::class);
         $newImageName = null;
         $request->validate([
             'name' => 'required|unique:products',
@@ -88,6 +90,7 @@ class ProductController extends Controller
      */
     public function edit(Product $product)
     {
+        $this->authorize('update', $product);
         $categories = Category::with('products')->get()->pluck('name', 'id');
         $brands = Brand::with('products')->get()->pluck('name', 'id');
 
@@ -103,6 +106,7 @@ class ProductController extends Controller
      */
     public function update(Request $request, Product $product)
     {
+        $this->authorize('update', $product);
         $newImageName = null;
         $request->validate([
             'category_id' => 'required|exists:categories,id',
@@ -143,6 +147,7 @@ class ProductController extends Controller
 //        if(Storage::delete($product->image)){
 //            $product->delete();
 //        }
+        $this->authorize('delete', $product);
         if($product->image){
             unlink(public_path('images').'/'.$product->image);
             $product->delete();
