@@ -6,6 +6,7 @@ use App\Models\Category;
 use App\Models\Brand;
 use App\Models\Product;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\Rule;
 
@@ -18,7 +19,7 @@ class ProductController extends Controller
      */
     public function index()
     {
-        $products = Product::with('category', 'brand')->get();
+        $products = Product::with('category', 'brand')->filter(request(['search']))->paginate(15);
         return view('products.index', compact('products'));
     }
 
@@ -29,7 +30,7 @@ class ProductController extends Controller
      */
     public function create()
     {
-        $this->authorize('create', Product::class);
+        $this->authorize('product-create', Product::class);
         return view('products.create',[
             'categories' => Category::with('products')->get(),
             'brands' => Brand::with('products')->get()
@@ -44,7 +45,7 @@ class ProductController extends Controller
      */
     public function store(Request $request)
     {
-        $this->authorize('create', Product::class);
+        $this->authorize('product-create', Product::class);
         $newImageName = null;
         $request->validate([
             'name' => 'required|unique:products',
@@ -90,7 +91,7 @@ class ProductController extends Controller
      */
     public function edit(Product $product)
     {
-        $this->authorize('update', $product);
+        $this->authorize('product-edit', $product);
         $categories = Category::with('products')->get()->pluck('name', 'id');
         $brands = Brand::with('products')->get()->pluck('name', 'id');
 
@@ -106,7 +107,7 @@ class ProductController extends Controller
      */
     public function update(Request $request, Product $product)
     {
-        $this->authorize('update', $product);
+        $this->authorize('product-edit', Product::class);
         $newImageName = null;
         $request->validate([
             'category_id' => 'required|exists:categories,id',
@@ -118,6 +119,7 @@ class ProductController extends Controller
             'description' => 'required|min:15'
         ]);
         if($request->file('image')){
+            unlink(public_path('images').'/'.$product->image);
             $file = $request->file('image');
             $newImageName = time().'-'. preg_replace('/\s+/', '-', $request->name).'.'.$request->image->extension();
             $file->move(public_path('images'), $newImageName);
@@ -147,7 +149,7 @@ class ProductController extends Controller
 //        if(Storage::delete($product->image)){
 //            $product->delete();
 //        }
-        $this->authorize('delete', $product);
+        $this->authorize('product-delete', Product::class);
         if($product->image){
             unlink(public_path('images').'/'.$product->image);
             $product->delete();

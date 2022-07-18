@@ -2,10 +2,11 @@
 
 namespace Database\Seeders;
 
-use App\Models\Role;
+use App\Models\Permission;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
+use Spatie\Permission\Models\Role;
 
 class DatabaseSeeder extends Seeder
 {
@@ -18,28 +19,34 @@ class DatabaseSeeder extends Seeder
     {
 //         \App\Models\User::factory(10)->create();
 
-         $userRole = Role::create(['name' => 'user']);
-         $adminRole = Role::create(['name' => 'admin']);
-
          $admin = \App\Models\User::factory()->create([
              'name' => 'Admin',
              'email' => 'rathnakhen@gmail.com',
              'email_verified_at' => now(),
-             'role_id' => $adminRole->id,
+             'role_id' => '1',
              'password' => Hash::make('password')
          ]);
         $user = \App\Models\User::factory()->create([
             'name' => 'User',
             'email' => 'user@gmail.com',
             'email_verified_at' => now(),
-            'role_id' => $userRole->id,
+            'role_id' => '3',
             'password' => Hash::make('password')
         ]);
 
        $this->call([
              CategorySeeder::class,
              BrandSeeder::class,
-             ProductSeeder::class
+             ProductSeeder::class,
+             PermissionSeeder::class,
+             RoleSeeder::class
        ]);
+        $role = Role::find(1);
+        $permissions = Permission::pluck('id','id')->all();
+        $role->syncPermissions($permissions);
+        $admin->assignRole($role);
+        // User default viewer role
+        $role = Role::find(4);
+        $user->assignRole($role);
     }
 }

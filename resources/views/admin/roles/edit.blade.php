@@ -39,7 +39,7 @@
                         @csrf
                         <div  class="flex flex-col w-full my-5">
                             <label for="name" class="text-gray-500 mb-2">Permissions</label>
-                            <div class="max-w-md mx-auto m-2">
+                            <div class="text-left w-full m-2">
                                 @foreach($role->permissions as $rp)
                                     <span class="m-1 mb-4 p-1 bg-indigo-300 rounded-md">{{$rp->name}}</span>
                                 @endforeach
@@ -47,7 +47,7 @@
                             <select name="permissions[]"
                                    class="appearance-none border-2 border-gray-100 rounded-lg px-4 py-3 placeholder-gray-300 focus:outline-none focus:ring-2 focus:ring-green-600 focus:shadow-lg"
                             multiple>
-                                @foreach($permissions as $permission)<option value="{{$permission->id}}" @selected($role->hasPermission($permission->name))>{{$permission->name}}</option>@endforeach
+                                @foreach($permissions as $permission)<option value="{{$permission->id}}" @selected($role->hasPermissionTo($permission->name))>{{$permission->name}}</option>@endforeach
                             </select>
                             <ul class="text-sm text-red-600">
                                 @error('name')

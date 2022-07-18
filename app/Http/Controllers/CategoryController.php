@@ -15,7 +15,7 @@ class CategoryController extends Controller
      */
     public function index()
     {
-        $categories = Category::with('products')->get();
+        $categories = Category::latest()->filter(request(['search']))->paginate(15);
         return view('categories.index', compact('categories'));
     }
 
@@ -26,6 +26,7 @@ class CategoryController extends Controller
      */
     public function create()
     {
+        $this->authorize('product-create', Category::class);
         return view('categories.create');
     }
 
@@ -37,6 +38,7 @@ class CategoryController extends Controller
      */
     public function store(Request $request)
     {
+        $this->authorize('product-create', Category::class);
         $request->validate([
             'name' => 'required',
         ]);
@@ -65,6 +67,7 @@ class CategoryController extends Controller
      */
     public function edit(Category $category)
     {
+        $this->authorize('product-edit', $category);
         return view('categories.edit', compact('category'));
     }
 
@@ -77,6 +80,8 @@ class CategoryController extends Controller
      */
     public function update(Request $request, Category $category)
     {
+        $this->authorize('product-edit', $category);
+        $this->authorize('product-update', $category);
         $request->validate([
             'name' => 'required',
         ]);
@@ -94,6 +99,7 @@ class CategoryController extends Controller
      */
     public function destroy(Category $category)
     {
+        $this->authorize('product-delete', $category);
         $category->delete();
         return redirect('categories');
     }

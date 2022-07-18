@@ -29,6 +29,7 @@ Route::middleware(['auth'])->group(function() {
         return view('dashboard');
     })->name('dashboard');
     // Products
+    //route search
     Route::resource('/products', ProductController::class);
     // Category
     Route::resource('/categories', CategoryController::class);
@@ -42,7 +43,7 @@ Route::middleware(['auth'])->group(function() {
     Route::delete('/brands/{id}', [BrandController::class, 'destroy'])->name('brands.destroy');
 
     // Admin Role & Permission
-    Route::middleware(['auth', 'role:admin'])->name('admin.')->prefix('/admin')->group(function(){
+    Route::middleware(['auth'])->name('admin.')->prefix('/admin')->group(function(){
         Route::get('/', [AdminController::class, 'index'])->name('index');
         Route::post('/roles/{role}/permissions', [RoleController::class, 'assignPermission'])->name('roles.permissions');
         Route::resource('/roles', RoleController::class);

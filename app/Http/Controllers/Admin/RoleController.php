@@ -4,13 +4,13 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Permission;
-use App\Models\Role;
 use Illuminate\Http\Request;
+use Spatie\Permission\Models\Role;
 
 class RoleController extends Controller
 {
     public function index(){
-        $roles = Role::all();
+        $roles = Role::with('permissions', 'users')->get();
         return view('admin.roles.index', compact('roles'));
     }
     public function create(){
@@ -40,7 +40,7 @@ class RoleController extends Controller
     }
 
     public function assignPermission(Request $request, Role $role){
-        $data = $role->permissions()->sync($request->permissions);
+        $data = $role->syncPermissions($request->permissions);
         return back();
     }
 }

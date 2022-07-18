@@ -14,7 +14,7 @@ class BrandController extends Controller
      */
     public function index()
     {
-        $brands = Brand::with('products')->get();
+        $brands = Brand::latest()->filter(request(['search']))->paginate(15);
         return view('brands.index', compact('brands'));
     }
 
@@ -25,6 +25,7 @@ class BrandController extends Controller
      */
     public function create()
     {
+        $this->authorize('product-create', Brand::class);
         return view('brands.create');
     }
 
@@ -36,6 +37,7 @@ class BrandController extends Controller
      */
     public function store(Request $request)
     {
+        $this->authorize('product-create', Brand::class);
         $request->validate([
             'name' => 'required',
         ]);
@@ -64,6 +66,7 @@ class BrandController extends Controller
      */
     public function edit($id)
     {
+        $this->authorize('product-edit', Brand::class);
         $brand = Brand::findOrFail($id);
         return view('brands.edit', compact('brand'));
 
@@ -78,6 +81,7 @@ class BrandController extends Controller
      */
     public function update(Request $request, $id)
     {
+        $this->authorize('product-edit', Brand::class);
         $request->validate([
             'name' => 'required',
         ]);
@@ -95,6 +99,7 @@ class BrandController extends Controller
      */
     public function destroy($id)
     {
+        $this->authorize('product-update', Brand::class);
         $brand = Brand::findOrFail($id);
         $brand->delete();
         return redirect()->route('brands.index');

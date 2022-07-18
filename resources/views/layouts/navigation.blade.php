@@ -35,13 +35,13 @@
                     </x-nav-link>
                 </div>
                 <!-- Admin Links -->
-                @if(Auth::user()->hasRole('admin'))
+                @role('Admin')
                 <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
                     <x-nav-link :href="route('admin.index')" :active="request()->routeIs('roles.index')">
                         {{ __('Admin') }}
                     </x-nav-link>
                 </div>
-                    @endif
+                @endrole
             </div>
 
             <!-- Settings Dropdown -->
